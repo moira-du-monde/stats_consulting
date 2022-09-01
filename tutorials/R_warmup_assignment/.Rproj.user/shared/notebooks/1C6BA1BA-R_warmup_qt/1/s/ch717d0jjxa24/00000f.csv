@@ -1,0 +1,4 @@
+"0","# if (df$Rank == 1) {df$st_adj <- df$StudyTime - 4.791667"
+"0","# } else if (df$Rank == 2) {df$adj_st <- df$StudyTime - 6.028302"
+"0","# } else if (df$Rank == 3) {df$adj_st <- df$StudyTime - 9.210526"
+"0","# } else {df$adj_st <- df$StudyTime - 14.138889}"

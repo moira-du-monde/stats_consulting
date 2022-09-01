@@ -1,0 +1,8 @@
+"0",""
+"0","df <- read.csv('https://raw.githubusercontent.com/moira-du-monde/stats_consulting/main/tutorials/Sample_Dataset_2019.csv', header = T, na.strings=c('','NA'), stringsAsFactors = TRUE)"
+"0","# "
+"0","# df <- df %>% "
+"0","#   mutate_if(is.character, factor)"
+"0",""
+"0","linearmodel <- lm(df$SleepTime ~ df$StudyTime)"
+"0",""

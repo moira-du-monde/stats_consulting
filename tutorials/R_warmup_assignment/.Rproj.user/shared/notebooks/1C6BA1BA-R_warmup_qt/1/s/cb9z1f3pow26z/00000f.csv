@@ -1,0 +1,7 @@
+"0",""
+"0","linearmodel.lm = lm(df$SleepTime ~ df$StudyTime)"
+"0","linearmod.res = resid(linearmodel.lm)"
+"0",""
+"0","mod <- predict(linearmodel.lm)"
+"0","plot(mod,linearmod.res,"
+"0","     ylab = ""resid"", xlab = ""pred"")"

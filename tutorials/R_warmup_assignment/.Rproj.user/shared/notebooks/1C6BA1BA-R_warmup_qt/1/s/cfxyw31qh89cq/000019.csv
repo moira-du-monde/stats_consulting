@@ -1,0 +1,39 @@
+"0","library(readr) # versus readr::read_csv, latter used to load single internal function"
+"0",""
+"0","args(read_csv) #no stringsasfactors arg, so convert with added step base R"
+"1","function (file, col_names = TRUE, col_types = NULL, col_select = NULL, 
+"
+"1","    id = NULL, locale = default_locale(), na = c("""", ""NA""), 
+"
+"1","    quoted_na = TRUE, quote = ""\"""", comment = """", 
+"
+"1","    trim_ws = TRUE, skip = 0, n_max = Inf, guess_max = min(1000, 
+"
+"1","        n_max), name_repair = ""unique"", num_threads = readr_threads(), 
+"
+"1","    progress = show_progress(), show_col_types = should_show_types(), 
+"
+"1","    skip_empty_rows = TRUE, lazy = should_read_lazy()) 
+"
+"1","NULL
+"
+"0","df <- read_csv('https://raw.githubusercontent.com/moira-du-monde/stats_consulting/main/tutorials/Sample_Dataset_2019.csv', na=c('','NA'))"
+"2","[1mRows: [22m[34m435[39m [1mColumns: [22m[34m32[39m"
+"2","[36m--[39m [1mColumn specification[22m [36m-------------------------------------------------------------------------------------------------------------------------------[39m
+[1mDelimiter:[22m "",""
+[31mchr[39m   (3): Major, expgradmonth, State
+[32mdbl[39m  (27): ids, Gender, Age, Athlete, Smoking, Height, Weight, Mile, Rank, expgradyear, LiveOnCampus, HowCommute, CommuteTime, SleepTime, StudyTime...
+[34mdate[39m  (1): bday
+[34mtime[39m  (1): MileMinDur"
+"2","
+[36mi[39m Use `spec()` to retrieve the full column specification for this data.
+[36mi[39m Specify the column types or set `show_col_types = FALSE` to quiet this message."
+"0","df$State <- factor(df$State)"
+"0",""
+"0","# Can also use dplyr to accomplish this:"
+"0",""
+"0","# library(dplyr) # load dplyr"
+"0","# "
+"0","# df <- df %>% "
+"0","#    mutate_if(is.character, factor) #convert strings to factors"
+"0","head(df)"
