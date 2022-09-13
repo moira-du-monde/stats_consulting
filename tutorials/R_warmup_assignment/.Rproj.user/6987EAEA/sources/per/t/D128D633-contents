@@ -1,0 +1,106 @@
+---
+title: "Working with spatial data in R"
+author: "Moira O'Neill"
+format: html
+editor: visual
+---
+
+## Introduction to spatial data
+
+Why things happen where they do...
+
+## Geocoding
+
+Data source: https://www.kaggle.com/datasets/ahmedshahriarsakib/list-of-real-usa-addresses?resource=download
+
+```{r}
+
+df <- read.csv('USA_addresses.csv') #use base R to read in data
+
+df$zip <- sprintf("%05d", df$zip) # add leading zeros so all zipcode values have a width of 5
+
+df$full_add <- paste(df$address, df$city, df$state, df$zip, sep=", ") # use paste to combine address elements into a full address column
+
+head(df)
+```
+
+Geocoding with Google Maps (R package ggmaps) requires an API, involves dependencies, and each IP address is limited to 2,500 addresses/day (unless it's a paid account).
+
+Once geocoded, it's easy to visualize the locations using mapview
+
+Reference: https://guides.library.duke.edu/r-geospatial/geocode
+
+```{r}
+
+# install.packages("ggmap")
+# install.packages("mapview")
+
+library(ggmap)
+library(mapview)
+
+register_google(key = 'AIzaSyDm90O0oMsN9VpD3K7V50PXdsFoi7b4Xnw')
+
+addr.geo <- mutate_geocode(df, location = full_add, output = "latlona")
+
+View(addr.geo) # missing values...something to do w API...figure out
+
+addr.geo <- na.omit(addr.geo) # 
+
+mapview(addr.geo, xcol = "lon", ycol = "lat", crs = 4269, grid = FALSE)
+
+```
+
+Geocoding with US Census Geocoder:
+
+```{r}
+
+```
+
+Geocoding with OpenStreetMap (see https://nominatim.org/release-docs/latest/api/Overview/)
+
+```{r}
+
+```
+
+## Assigning xy data to geographical units
+
+Background on geocomputation...
+
+Spatial join using the sf and spData packages...
+
+```{r}
+
+# install.packages("sf")
+# install.packages("sp")
+# install.packages("spData")
+
+library(sf)
+library(sp)
+library(spData)
+
+
+gdf <- as.data.frame(addr.geo)
+
+gdf$xy <- paste(gdf$lon, gdf$lat, sep=", ") # combine lon and lat into new column xy
+
+sp <- SpatialPointsDataFrame(coords = xy, data = gdf,
+                               proj4string = CRS("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0")) # not working atm
+
+usa_ct <- st_read("tl_2021_us_zcta520.shp") #read in just the shapefile
+
+# a.data <- over(A, B[,"code"]) # not working atm
+```
+
+Accessing shapefiles from TIGER:
+
+```{r}
+
+install.packages("tigris")
+
+library(tigris)
+
+options(tigris_use_cache = TRUE)
+
+###
+
+```

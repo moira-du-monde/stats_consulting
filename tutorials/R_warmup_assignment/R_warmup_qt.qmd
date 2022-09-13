@@ -323,7 +323,23 @@ Check if any of the items need to be reverse-coded before doing this.
 After obtaining the Cronbach's alpha value, compute a new variable containing the subjects' composite scores by averaging their responses to the Likert items. Note: Simply using the mean() function alone will not achieve this.
 
 ```{r}
+library(psych)
 
+df <- read.csv('https://raw.githubusercontent.com/moira-du-monde/stats_consulting/main/tutorials/Sample_Dataset_2019.csv', header = T, na.strings=c('','NA'), stringsAsFactors = TRUE)
+
+str(df)
+
+extra <- df[, c("E_1", "E_6", "E_11", "E_16", "E_21", "E_26", "E_31", "E_36")]
+
+alpha(extra, check.keys=TRUE)
+
+# help("keys")
+
+extra$sums <- rowSums(extra)
+
+extra$avg <- extra$sums / 8
+
+summary(extra)
 ```
 
 ## Q11.
@@ -450,23 +466,17 @@ df$Rank <- ordered(df$Rank,
 
 group_mean <- aggregate(StudyTime ~ Rank, data = df, mean)
 
-group_mean
+group_mean$StudyTime -> group_mean$ranked_st_means
 
-r_1 <- df[df$Rank == 1,]
-r_1$StudyTime <- r_1$StudyTime - 4.791667
+df2 <- merge(df,group_mean,by="Rank")
 
-r_2 <- df[df$Rank == 2,]
-r_2$StudyTime <- r_2$StudyTime - 6.028302
+summary(df2)
 
-r_3 <- df[df$Rank == 3,]
-r_3$StudyTime <- r_3$StudyTime - 9.210526
+df2$st_grp_mc <- df2$StudyTime.x - df2$ranked_st_means
 
-r_4 <- df[df$Rank == 4,]
-r_4$StudyTime <- r_4$StudyTime - 14.138889
+summary(df2)
 
-ranked <- rbind(r_1, r_2, r_3, r_4)
-
-fit_rank <- lm(ranked$SleepTime ~ ranked$StudyTime + ranked$Rank)
+fit_rank <- lm(df2$SleepTime ~ df2$st_grp_mc + df2$Rank)
 
 summary(fit_rank)
 ```
