@@ -1,7 +1,3 @@
-"0",""
-"0","linearmodel.lm = lm(df$SleepTime ~ df$StudyTime)"
-"0","linearmod.res = resid(linearmodel.lm)"
-"0",""
-"0","mod <- predict(linearmodel.lm)"
-"0","plot(mod,linearmod.res,"
-"0","     ylab = ""resid"", xlab = ""pred"")"
+version https://git-lfs.github.com/spec/v1
+oid sha256:098990e2e93083b73043ab6a98daa42f991545132a4d0fd47f8b02683c0ca5ed
+size 226

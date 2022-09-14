@@ -1,6 +1,3 @@
-"0",""
-"0","sum(is.na(df$State))"
-"1","[1]"
-"1"," 26"
-"1","
-"
+version https://git-lfs.github.com/spec/v1
+oid sha256:6ed9c0e83da92b8615eb0478372206c5aa1d7706cd6df1f6e802a51888f9ed80
+size 62

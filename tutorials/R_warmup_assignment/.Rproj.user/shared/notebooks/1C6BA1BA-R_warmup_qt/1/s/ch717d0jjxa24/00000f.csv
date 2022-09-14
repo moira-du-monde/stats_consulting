@@ -1,4 +1,3 @@
-"0","# if (df$Rank == 1) {df$st_adj <- df$StudyTime - 4.791667"
-"0","# } else if (df$Rank == 2) {df$adj_st <- df$StudyTime - 6.028302"
-"0","# } else if (df$Rank == 3) {df$adj_st <- df$StudyTime - 9.210526"
-"0","# } else {df$adj_st <- df$StudyTime - 14.138889}"
+version https://git-lfs.github.com/spec/v1
+oid sha256:75b8f1d20c9e26015be057a0c79e4d9ee4feb49dd4a39d4192e00108866f6a41
+size 261
