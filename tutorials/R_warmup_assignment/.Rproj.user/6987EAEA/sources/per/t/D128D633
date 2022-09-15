@@ -3,7 +3,7 @@
     "path": "~/GitHub/STDRR/spatial_data_wrangling/Spatial_data_wrangling.qmd",
     "project_path": null,
     "type": "quarto_markdown",
-    "hash": "4111059043",
+    "hash": "3356991650",
     "contents": "",
     "dirty": false,
     "created": 1663011318140.0,
@@ -16,16 +16,17 @@
         "Source": "Source",
         "docOutlineVisible": "1",
         "rmdVisualCollapsedChunks": "",
-        "rmdVisualModeLocation": "1358:1140",
-        "cursorPosition": "90,49",
-        "scrollLine": "0"
+        "rmdVisualModeLocation": "2692:1669.5",
+        "cursorPosition": "38,116",
+        "scrollLine": "0",
+        "docOutlineSize": "94"
     },
     "folds": "",
-    "lastKnownWriteTime": 1663011642,
+    "lastKnownWriteTime": 1663196599,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1663011642734,
+    "last_content_update": 1663196599183,
     "read_only": false,
     "read_only_alternatives": []
 }

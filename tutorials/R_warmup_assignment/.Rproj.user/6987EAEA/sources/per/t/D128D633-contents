@@ -5,13 +5,9 @@ format: html
 editor: visual
 ---
 
-## Introduction to spatial data
-
-Why things happen where they do...
-
 ## Geocoding
 
-Data source: https://www.kaggle.com/datasets/ahmedshahriarsakib/list-of-real-usa-addresses?resource=download
+Download dummy data set from: https://www.kaggle.com/datasets/ahmedshahriarsakib/list-of-real-usa-addresses?resource=download
 
 ```{r}
 
@@ -24,7 +20,7 @@ df$full_add <- paste(df$address, df$city, df$state, df$zip, sep=", ") # use past
 head(df)
 ```
 
-Geocoding with Google Maps (R package ggmaps) requires an API, involves dependencies, and each IP address is limited to 2,500 addresses/day (unless it's a paid account).
+**Geocoding with Google Maps** (R package ggmaps) requires an API, involves dependencies, and each IP address is limited to 2,500 addresses/day (unless it's a paid account).
 
 Once geocoded, it's easy to visualize the locations using mapview
 
@@ -38,69 +34,91 @@ Reference: https://guides.library.duke.edu/r-geospatial/geocode
 library(ggmap)
 library(mapview)
 
-register_google(key = 'AIzaSyDm90O0oMsN9VpD3K7V50PXdsFoi7b4Xnw')
+google_key <- Sys.getenv('google_api') # if you've saved your google_key as an Renviron file
+
+# to do this on windows, open powershell and run: Add-Content c:\Users\$env:USERNAME\Documents\.Renviron "google_key = [api key here]"
+
+register_google(key = google_key)
 
 addr.geo <- mutate_geocode(df, location = full_add, output = "latlona")
 
-View(addr.geo) # missing values...something to do w API...figure out
+View(addr.geo) # take a look at the table
 
-addr.geo <- na.omit(addr.geo) # 
+addr.geo <- na.omit(addr.geo)
 
-mapview(addr.geo, xcol = "lon", ycol = "lat", crs = 4269, grid = FALSE)
-
-```
-
-Geocoding with US Census Geocoder:
-
-```{r}
+# to visualize:
+# mapview(addr.geo, xcol = "lon", ycol = "lat", crs = 4269, grid = FALSE) # default US Census coordinate reference system ('crs') is NAD1983 (EPSG: 4269), so we will assign that to all of our data
 
 ```
 
-Geocoding with OpenStreetMap (see https://nominatim.org/release-docs/latest/api/Overview/)
+For geocoding with **US Census Geocoder**, see https://geocoding.geo.census.gov/geocoder/
 
-```{r}
+For geocoding with **OpenStreetMap**, see https://nominatim.org/release-docs/latest/api/Overview/
 
-```
+(I hope to update with examples in the very near future.)
 
-## Assigning xy data to geographical units
+## Assigning xy (point) data to geographical areas (polygons)
 
-Background on geocomputation...
-
-Spatial join using the sf and spData packages...
+Here's an example of a spatial join using the sf and sp packages **when you've got the addresses in a dataframe and the geographic data in a shapefile in your working directory**:
 
 ```{r}
 
 # install.packages("sf")
 # install.packages("sp")
-# install.packages("spData")
+
 
 library(sf)
 library(sp)
-library(spData)
+
+library(dplyr)
 
 
 gdf <- as.data.frame(addr.geo)
 
-gdf$xy <- paste(gdf$lon, gdf$lat, sep=", ") # combine lon and lat into new column xy
+points <- st_as_sf(gdf, coords = c("lon", "lat"))
 
-sp <- SpatialPointsDataFrame(coords = xy, data = gdf,
-                               proj4string = CRS("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0")) # not working atm
+points <- st_set_crs(points, 4269) # assign crs
 
-usa_ct <- st_read("tl_2021_us_zcta520.shp") #read in just the shapefile
+usa_zcta <- st_read("tl_2021_us_zcta520.shp") %>%
+  st_transform(crs = 4269)
 
-# a.data <- over(A, B[,"code"]) # not working atm
+points_zips <- points %>%
+  st_join(usa_zcta,
+          join = st_intersects,
+          left = TRUE)
+
+# if you want to check to see the results:
+# head(points_zips)
 ```
 
-Accessing shapefiles from TIGER:
+Another option is to **access shapefiles directly from the Census TIGER/Line website**, in this case at the census tract scale:
 
 ```{r}
 
-install.packages("tigris")
+# install.packages("tigris")
 
 library(tigris)
 
-options(tigris_use_cache = TRUE)
+# help("tigris")
+# github repo with overview of the package: https://github.com/walkerke/tigris
 
 ###
 
+help("tracts") # refer to this if you want to select specific states and/or counties
+
+usa_ct <- tracts(cb=TRUE) # all defaults for national level except set cb=true to just download the generalized 1:500k file (not the most detailed)
+
+# NOTE the default crs is 4269 so we don't need to change anything
+```
+
+Then we can join the addresses we've got to the tract:
+
+```{r}
+
+points_tracts <- points %>%
+  st_join(usa_ct,
+          join = st_intersects,
+          left = TRUE)
+
+# head(points_tracts) # uncomment if you want to take a look 
 ```
